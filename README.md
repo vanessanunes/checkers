@@ -17,10 +17,10 @@ regras de capturas
 - A pedra que em um lance capturar mais de uma peça, passar e não parar na
  área de coroação, não tem o direito de ser coroada
 - São declaradas empates se:
--- Após 20 lances sucessivos de damas de cada jogador sem captura, a partida é 
+1. Após 20 lances sucessivos de damas de cada jogador sem captura, a partida é 
 declarada como empate;
--- 2 damas contra 2 damas;
--- 2 damas contra uma;
--- 2 damas contra uma dama e uma pedra;
--- uma dama contra uma dama e uma dama contra uma dama e uma pedra, são 
+2. 2 damas contra 2 damas;
+3. 2 damas contra uma;
+4. 2 damas contra uma dama e uma pedra;
+5. uma dama contra uma dama e uma dama contra uma dama e uma pedra, são 
 declarados empatados após 5 lances de cada jogador.
