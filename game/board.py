@@ -31,4 +31,3 @@ class Piece():
         return(
             'Quantities of pieces for any player is: {}\nOr, {} for all'
             .format(self.pieces, self.pieces * 2))
-
