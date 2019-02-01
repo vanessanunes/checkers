@@ -3,16 +3,12 @@ from board import Board
 
 pygame.init()
 
-heigth = 800
-width = 600
-display = pygame.display.set_mode([heigth, width])
-
-black_color = (0, 0, 0)
-white_color = (255, 255, 255)
-board_color = (0, 31, 0)
-
-
 class Game():
+    global board
+    board = Board()
+    # global display
+    display = pygame.display.set_mode([board.heigth, board.width])
+    
 
     def create_display(self):
         """
@@ -25,6 +21,12 @@ class Game():
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     quit()
-            display.fill(black_color)
-            board = Board()
-            board.draw_board(display, white_color, [1, 5, 40, 50])
+
+            board.draw_board(self.display)
+            self.display.fill(board.black_color)
+            # display.draw_board(display, board.white_color, [1, 5, 40, 50])
+
+
+
+    def main_menu(self):
+        pass
