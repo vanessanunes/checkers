@@ -75,7 +75,7 @@ class Jogo():
                 break
 
         print('Para onde você gostaria de mover sua peça?\n')
-        self.sugestao_movimentacao(jogador, linha, coluna)
+        self.mover_peca(jogador, linha, coluna)
         print('Sugestão de movimentação ok??')
         
         #e1 ou e3
@@ -85,50 +85,66 @@ class Jogo():
         self.conta_turno()
         self.atualizar_matriz(peca_inicial, peca_atual)
 
-    def sugestao_movimentacao(self, jogador, linha, coluna):
+    def mover_peca(self, jogador, linha, coluna):
         # if jogador is 'o':
         for key, val in self.letras.items():
             if jogador is 'o':
                 if val == linha-1:
                     opcao_letra = key
-                    import pdb
-                    pdb.set_trace()
-                    
-                    if self.matriz_jogadores[val][coluna-1] is 'x':
-                        self.pontuacao[0] += 1
-                        print('Jogador {} fez um ponto! Total de {}'.format(jogador, self.pontuacao[0]))
-                    if self.matriz_jogadores[val][coluna+1] is 'x':
-                        self.pontuacao[0] += 1
-                        print('Jogador {} fez um ponto! Total de {}'.format(jogador, self.pontuacao[0]))
-                    if self.matriz_jogadores[val][coluna-1] is '-':
-                        print('Você tem a opção de: \n\t => {}{}'.format(opcao_letra, coluna-1))
-                    if self.matriz_jogadores[val][coluna+1] is '-':
+                    # impedir passagem para lateral
+                    if not coluna+1 >= 9:
                         print('Você tem a opção de: \n\t => {}{}'.format(opcao_letra, coluna+1))
-                    if val <= 0 or val >= 9:
-                        print('O "val" já está fora do perimetro: {}'.format(val))
+                    if not coluna-1 <= 0:
+                        print('Você tem a opção de: \n\t => {}{}'.format(opcao_letra, coluna-1))
+                    # comer peça dos adversário
+                    # impedir de se mover em linha reta
             if jogador is 'x':
                 if val == linha+1:
                     opcao_letra = key
-                    if self.matriz_jogadores[val][coluna-1] is 'o':
-                        self.pontuacao[1] += 1
-                        print('Jogador {} fez um ponto! Total de {}'.format(jogador, self.pontuacao[0]))
-                    if self.matriz_jogadores[val][coluna+1] is 'o':
-                        self.pontuacao[1] += 1
-                        print('Jogador {} fez um ponto! Total de {}'.format(jogador, self.pontuacao[0]))
-                    if self.matriz_jogadores[val][coluna-1] is '-':
-                        print('Você tem a opção de: \n\t => {}{}'.format(opcao_letra, coluna-1))
-                    if self.matriz_jogadores[val][coluna+1] is '-':
+                    # impedir passagem para lateral
+                    if not coluna+1 >= 9:
                         print('Você tem a opção de: \n\t => {}{}'.format(opcao_letra, coluna+1))
-                    if val <= 0 or val >= 9:
-                        print('O "val" já está fora do perimetro: {}'.format(val))
-            # if val == linha+1
-        # else:
-        #         for key, val in self.letras.items():
-        #             if val == linha-1:
-        #                 opcao_letra = key
-        #                 print('Você tem a opção de: \n\t => {}{}'.format(opcao_letra, coluna-1))
-        #                 print('Você tem a opção de: \n\t => {}{}'.format(opcao_letra, coluna+1))
+                    if not coluna-1 <= 0:
+                        print('Você tem a opção de: \n\t => {}{}'.format(opcao_letra, coluna-1))
+                    # comer peça do adversário
+                    # impedir de se mover em linha reta
+                    
 
+
+
+                    # import pdb
+                    # pdb.set_trace()
+
+            #         if coluna-1 <= 0:
+            #             if self.matriz_jogadores[val][coluna-1] is 'x':
+            #                 self.pontuacao[0] += 1
+            #                 print('Jogador {} fez um ponto! Total de {}'.format(jogador, self.pontuacao[0]))
+            #             if self.matriz_jogadores[val][coluna-1] is '-':
+            #                 print('Você tem a opção de: \n\t => {}{}'.format(opcao_letra, coluna-1))
+                    
+            #         if coluna+1 >= 9:
+            #             if self.matriz_jogadores[val][coluna+1] is 'x':
+            #                 self.pontuacao[0] += 1
+            #                 print('Jogador {} fez um ponto! Total de {}'.format(jogador, self.pontuacao[0]))
+            #             if self.matriz_jogadores[val][coluna+1] is '-':
+            #                 print('Você tem a opção de: \n\t => {}{}'.format(opcao_letra, coluna+1))
+
+            # if jogador is 'x':
+            #     if val == linha+1:
+            #         opcao_letra = key
+            #         if coluna-1 <= 0:
+            #             if self.matriz_jogadores[val][coluna-1] is 'o':
+            #                 self.pontuacao[1] += 1
+            #                 print('Jogador {} fez um ponto! Total de {}'.format(jogador, self.pontuacao[0]))
+            #             if self.matriz_jogadores[val][coluna-1] is '-':
+            #                 print('Você tem a opção de: \n\t => {}{}'.format(opcao_letra, coluna-1))
+                        
+            #             if coluna+1 >= 9:
+            #                 if self.matriz_jogadores[val][coluna+1] is 'o':
+            #                     self.pontuacao[1] += 1
+            #                     print('Jogador {} fez um ponto! Total de {}'.format(jogador, self.pontuacao[0]))
+            #                 if self.matriz_jogadores[val][coluna+1] is '-':
+            #                     print('Você tem a opção de: \n\t => {}{}'.format(opcao_letra, coluna+1))
 
 
     def validar_peca_jogador(self, peca, jogador):
