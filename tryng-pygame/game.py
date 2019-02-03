@@ -3,12 +3,11 @@ from board import Board
 
 pygame.init()
 
+
 class Game():
     global board
     board = Board()
-    # global display
-    display = pygame.display.set_mode([board.heigth, board.width])
-    
+    display = pygame.display.set_mode([board.width, board.height])
 
     def create_display(self):
         """
@@ -20,13 +19,13 @@ class Game():
         while (1):
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
+                    pygame.quit()
                     quit()
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    board.avalia_clique(pygame.mouse.get_pos())
 
             board.draw_board(self.display)
             self.display.fill(board.black_color)
-            # display.draw_board(display, board.white_color, [1, 5, 40, 50])
-
-
 
     def main_menu(self):
         pass
