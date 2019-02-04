@@ -11,7 +11,7 @@ class Player:
         self.char = Piece(char)
         self.points = 0
 
-    def __str__(self):
-        return('Return of player: "{}" with char "{}"'.format(
-            self.name, self.char))
+    # def __str__(self):
+        # return('Return of player: "{}" with char "{}"'.format(
+        #     self.name, self.char))
         # print('Player {} have {} point!'.format(self.name, self.points))
