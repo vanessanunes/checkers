@@ -1,17 +1,30 @@
 # -*- coding: utf-8 -*-
 class Game():
 
+    # matriz_players = [
+    #     ['/', '1', '2', '3', '4', '5', '6', '7', '8'],
+    #     ['a', 'x', ' ', 'x', ' ', 'x', ' ', 'x', ' '],
+    #     ['b', ' ', 'x', ' ', 'x', ' ', 'x', ' ', 'x'],
+    #     ['c', 'x', ' ', 'x', ' ', 'X', ' ', 'x', ' '],
+    #     ['d', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+    #     ['e', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+    #     ['f', ' ', 'o', ' ', 'o', ' ', 'o', ' ', 'o'],
+    #     ['g', 'o', ' ', 'o', ' ', 'o', ' ', 'o', ' '],
+    #     ['h', ' ', 'o', ' ', 'o', ' ', 'o', ' ', 'o']
+    # ]
+
     matriz_players = [
         ['/', '1', '2', '3', '4', '5', '6', '7', '8'],
-        ['a', 'x', ' ', 'x', ' ', 'x', ' ', 'x', ' '],
-        ['b', ' ', 'x', ' ', 'x', ' ', 'x', ' ', 'x'],
-        ['c', 'x', ' ', 'x', ' ', 'x', ' ', 'x', ' '],
+        ['a', 'x', ' ', 'x', ' ', 'x', ' ', 'O', ' '],
+        ['b', ' ', ' ', ' ', ' ', ' ', 'x', ' ', ' '],
+        ['c', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
         ['d', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
         ['e', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-        ['f', ' ', 'o', ' ', 'o', ' ', 'o', ' ', 'o'],
-        ['g', 'o', ' ', 'o', ' ', 'o', ' ', 'o', ' '],
-        ['h', ' ', 'o', ' ', 'o', ' ', 'o', ' ', 'o']
+        ['f', ' ', ' ', ' ', ' ', ' ', 'O', ' ', 'o'],
+        ['g', ' ', ' ', 'o', ' ', 'o', ' ', ' ', ' '],
+        ['h', ' ', 'o', ' ', 'o', ' ', 'X', ' ', ' ']
     ]
+
     letras = {
         'a': 1,
         'b': 2,
@@ -25,8 +38,8 @@ class Game():
     players = ('x', 'o')
     player = None
     score = {
-    'x': 0,
-    'o': 0,
+        'x': 0,
+        'o': 0,
     }
     shift = 1
 
@@ -57,18 +70,31 @@ class Game():
             if casa_linha_nova > casa_linha_atual:
                 print('Não pode mover para trás!')
                 return False
-            # pontuação, caso a casa nova tiver peça adversario, pontuar
-            if self.matriz_players[casa_linha_nova][casa_col_nova] is 'x':
+            if self.matriz_players[casa_linha_nova][casa_col_nova] is 'x' or \
+                self.matriz_players[casa_linha_nova][casa_col_nova] is 'X':
                 self.matriz_players[casa_linha_nova][casa_col_nova] = ' '
                 self.count_point()
-             
+            if casa_linha_nova == 1:
+                print('Congratulations player 1, now you have a King')
+                self.matriz_players[casa_linha_nova][casa_col_nova] = 'O'
+            if self.matriz_players[casa_linha_nova][casa_col_nova] is 'o' or \
+                self.matriz_players[casa_linha_nova][casa_col_nova] is 'O':
+                print('Não pode comer a sua própria peça')
+
         if self.player is 'x':
             if casa_linha_atual > casa_linha_nova:
                 print('Não pode mover para trás!')
                 return False
-            if self.matriz_players[casa_linha_nova][casa_col_nova] is 'o':
+            if self.matriz_players[casa_linha_nova][casa_col_nova] is 'o' or \
+                self.matriz_players[casa_linha_nova][casa_col_nova] is 'O':
                 self.matriz_players[casa_linha_nova][casa_col_nova] = ' '
                 self.count_point()
+            if casa_linha_nova == 8:
+                print('Congratulations player 2, now you have a King')
+                self.matriz_players[casa_linha_nova][casa_col_nova] = 'X'
+            if self.matriz_players[casa_linha_nova][casa_col_nova] is 'x' or \
+                self.matriz_players[casa_linha_nova][casa_col_nova] is 'X':
+                print('Não pode comer a sua própria peça')
 
         return True
 
@@ -96,7 +122,7 @@ class Game():
     def jogada(self):
         shift = self.shift % 2
         self.player = self.players[shift]
-        print('~> Vez do jogador {}, shift {}'.format(self.player, shift))
+        print('~> Vez do jogador 1, nova a peça {}, shift {}'.format(self.player, self.shift))
 
         linha = None
         coluna = None
@@ -112,26 +138,27 @@ class Game():
 
         move_peca = False
         while move_peca == False:
-            print('Para onde você gostaria de mover sua peça?\n')
+            print('Para onde você gostaria de mover sua peça?')
             self.sugestao_movimento(linha, coluna)
             peca_atual = input('Digite no console sua resposta: ')
             if self.atualizar_matriz(peca_inicial, peca_atual) is True:
                 move_peca = True
-            
         self.count_shift()
         self.start()
 
-
     def sugestao_movimento(self, linha, coluna):
+        print('sugestao_movimento')
+        peca_da_vez = self.matriz_players[linha][coluna]
+
         for key, val in self.letras.items():
-            if self.player is 'o':
+            if peca_da_vez is 'o':
                 if val == linha-1:
                     opcao_letra = key
                     if not coluna+1 >= 9:
                         print('Você tem a opção de: \n\t => {}{}'.format(opcao_letra, coluna+1))
                     if not coluna-1 <= 0:
                         print('Você tem a opção de: \n\t => {}{}'.format(opcao_letra, coluna-1))
-            if self.player is 'x':
+            if peca_da_vez is 'x':
                 if val == linha+1:
                     opcao_letra = key
                     if not coluna+1 >= 9:
@@ -139,10 +166,14 @@ class Game():
                     if not coluna-1 <= 0:
                         print('Você tem a opção de: \n\t => {}{}'.format(opcao_letra, coluna-1))
 
+            if peca_da_vez is 'O':
+                print('DAMA! Boa mexer a Dama!')
+
+            if peca_da_vez is 'X':
+                print('DAMA! Boa mexer a Dama!')
+
     def validar_peca_jogador(self, peca):
-        # import pdb
-        # pdb.set_trace()
-        if self.player is peca:
+        if (self.player is peca) or (self.player == peca.lower()):
             print('Ok, vc é o jogador certo')
             return True
 
@@ -154,7 +185,6 @@ class Game():
 
 
     def desmonta_peca(self, coordenadas):
-        
         while True:
             try:
                 return self.letras[coordenadas[0]], int(coordenadas[1])
