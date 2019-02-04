@@ -1,33 +1,44 @@
 """
     define boards estructs
 """
-# importar as coisas aqui
-
 
 class Board():
+    # matriz_players = [
+    #     ['/', '1', '2', '3', '4', '5', '6', '7', '8'],
+    #     ['a', 'x', ' ', 'x', ' ', 'x', ' ', 'x', ' '],
+    #     ['b', ' ', 'x', ' ', 'x', ' ', 'x', ' ', 'x'],
+    #     ['c', 'x', ' ', 'x', ' ', 'X', ' ', 'x', ' '],
+    #     ['d', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+    #     ['e', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+    #     ['f', ' ', 'o', ' ', 'o', ' ', 'o', ' ', 'o'],
+    #     ['g', 'o', ' ', 'o', ' ', 'o', ' ', 'o', ' '],
+    #     ['h', ' ', 'o', ' ', 'o', ' ', 'o', ' ', 'o']
+    # ]
+    def __init__(self):
+        self.board = [
+            ['/', '1', '2', '3', '4', '5', '6', '7', '8'],
+            ['a', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            ['b', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            ['c', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            ['d', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            ['e', ' ', ' ', 'x', ' ', 'x', ' ', ' ', ' '],
+            ['f', ' ', ' ', ' ', ' ', ' ', 'O', ' ', 'o'],
+            ['g', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+            ['h', ' ', ' ', ' ', ' ', ' ', 'X', ' ', ' ']
+        ]
 
-    def __init__(self, width, height):
-        self.width = width
-        self.height = height
-        self.board = [[0] * self.height for i in range(self.width)]
+        self.letters = {
+            'a': 1,
+            'b': 2,
+            'c': 3,
+            'd': 4,
+            'e': 5,
+            'f': 6,
+            'g': 7,
+            'h': 8
+        }
 
-    def __repr__(self):
-        print(self.board)
+    def show_matriz(self):
+        for i in self.board:
+            print('\t {}'.format(i))
 
-    def setup(self):
-        import pdb
-        pdb.set_trace()
-
-        # get line: self.board[0]
-        # get column: self.board[0][2]
-
-
-class Piece():
-
-    def __init__(self, pieces):
-        self.pieces = pieces
-
-    def __repr__(self):
-        return(
-            'Quantities of pieces for any player is: {}\nOr, {} for all'
-            .format(self.pieces, self.pieces * 2))
