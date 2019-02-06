@@ -6,7 +6,7 @@ from game.board import Board
 
 class Game():
     board = Board()
-    matriz_players = board.board
+    matriz = board.board
     players = [None, None]
     player = None
     score = {
@@ -15,11 +15,13 @@ class Game():
     }
     shift = 0
 
-    def start(self):
+    def __init__(self):
         print('\t ** Welcome to the Checkers Game! ** ')
         self.create_players()
+
+    def start(self):
         self.board.show_matriz()
-        self.jogada()
+        self.round()
 
     def create_players(self):
         self.players[0] = Player('Player 1', 'o')
@@ -31,191 +33,127 @@ class Game():
         else:
             self.player = self.players[1]
         print('~> Player {} move the piece {}, shift {}'.format(
-            self.player.name, self.player.char.piece, self.shift + 1))
+            str(self.player), self.player.char.piece, self.shift + 1))
 
     def verifica_movimentacao(self, casa_atual, casa_nova):
-        # print('verifica_movimentacao')
-        linha_atual, col_atual = self.desmonta_peca(casa_atual)
-        linha_nova, col_nova = self.desmonta_peca(casa_nova)
+        atual_line, atual_col = self.detach_item(casa_atual)
+        new_line, new_col = self.detach_item(casa_nova)
 
-        if linha_nova == linha_atual or col_atual == col_nova:
-            print('movimento inválido, tente novamente')
+        if new_line == atual_line or atual_col == new_col:
+            print('!!! WRONG MOVE !!! Try again')
             return False
 
-
-        if self.matriz_players[linha_atual][col_atual] == 'o':
-            # se a linha for diferente, ou seja subindo OK
-            if not(linha_nova == linha_atual - 1):
-                print('movimento inválido')
+        if self.matriz[atual_line][atual_col] == 'o':
+            if not(new_line == atual_line - 1):
+                print('!!! WRONG MOVE !!!')
                 return False
 
-            if self.matriz_players[linha_nova][col_nova] == ' ':
-                if col_atual + 1 == col_nova or col_atual - 1 == col_nova:
-                    self.matriz_players[linha_nova][col_nova] = 'o'
-                    self.matriz_players[linha_atual][col_atual] = ' '
-                    if linha_nova == 1:
+            if self.matriz[new_line][new_col] == ' ':
+                if atual_col + 1 == new_col or atual_col - 1 == new_col:
+                    self.matriz[new_line][new_col] = 'o'
+                    self.matriz[atual_line][atual_col] = ' '
+                    if new_line == 1:
                         print('Congratulations player 2, now you have a King')
-                        self.matriz_players[linha_nova][col_nova] = 'O'
+                        self.matriz[new_line][new_col] = 'O'
                     return True
 
-            elif self.matriz_players[linha_nova][col_nova].lower() == 'x':
-                unidade = -2 if col_nova < col_atual else 2
-                if self.matriz_players[linha_nova + unidade][col_nova + unidade] == ' ':
-                    self.matriz_players[linha_nova][col_nova] = ' '
-                    self.matriz_players[linha_nova + unidade][col_nova + unidade] = 'o'
+            elif self.matriz[new_line][new_col].lower() == 'x':
+                unidade = -1 if new_col < atual_col else 1
+
+                if self.matriz[new_line + unidade][new_col + unidade] == ' ':
+                    self.matriz[new_line][new_col] = ' '
+                    self.matriz[new_line + unidade][new_col + unidade] = 'o'
                     self.count_point()
-                    if linha_nova == 1:
+                    if new_line == 1:
                         print('Congratulations player 2, now you have a King')
-                        self.matriz_players[linha_nova][col_nova] = 'O'
+                        self.matriz[new_line][new_col] = 'O'
                     return True
-            print('movimento inválido')
+            print('!!! WRONG MOVE !!!')
             return False
-        
-        if self.matriz_players[linha_atual][col_atual] == 'x':
-            if not(linha_nova == linha_atual + 1):
-                print('movimento inválido')
+
+        elif self.matriz[atual_line][atual_col] == 'x':
+            if not(new_line == atual_line + 1):
+                print('!!! WRONG MOVE !!!')
                 return False
 
-            if self.matriz_players[linha_nova][col_nova] == ' ':
-                if col_atual + 1 == col_nova or col_atual - 1 == col_nova:
-                    self.matriz_players[linha_nova][col_nova] = 'x'
-                    self.matriz_players[linha_atual][col_atual] = ' '
-                    if linha_nova == 8:
+            if self.matriz[new_line][new_col] == ' ':
+                if atual_col + 1 == new_col or atual_col - 1 == new_col:
+                    self.matriz[new_line][new_col] = 'x'
+                    self.matriz[atual_line][atual_col] = ' '
+                    if new_line == 8:
                         print('Congratulations player 2, now you have a King')
-                        self.matriz_players[linha_nova][col_nova] = 'X'
+                        self.matriz[new_line][new_col] = 'X'
                     return True
-            elif self.matriz_players[linha_nova][col_nova].lower() == 'o':
-                unidade = -2 if col_nova < col_atual else 2
-                if self.matriz_players[linha_nova + unidade][col_nova + unidade] == ' ':
-                    self.matriz_players[linha_nova][col_nova] = ' '
-                    self.matriz_players[linha_nova + unidade][col_nova + unidade] = 'x'
+            elif self.matriz[new_line][new_col].lower() == 'o':
+                unidade = -1 if new_col < atual_col else 1
+
+                if self.matriz[new_line + unidade][new_col + unidade] == ' ':
+                    self.matriz[new_line][new_col] = ' '
+                    self.matriz[atual_line][atual_col] = ' '
+                    self.matriz[new_line + unidade][new_col + unidade] = 'x'
                     self.count_point()
-                    if linha_nova == 1:
+                    if new_line == 1:
                         print('Congratulations player 2, now you have a King')
-                        self.matriz_players[linha_nova][col_nova] = 'X'
+                        self.matriz[new_line][new_col] = 'X'
                     return True
-            print('movimento inválido')
+            print('!!! WRONG MOVE !!!')
             return False
 
-        if self.matriz_players[linha_atual][col_atual] == 'O':
-            # if linha_atual == col_atual:
-            #     print('movimento inválido col')
-            #     return False
+        elif self.matriz[atual_line][atual_col] == 'O':
+            return self.king_walk('O', casa_atual, casa_nova)
 
-            # ela pula mais de uma casa
-            step_l = -1 if linha_atual > linha_nova else 1
-            step_c = -1 if col_atual > linha_nova else 1
+        elif self.matriz[atual_line][atual_col] == 'X':
+            return self.king_walk('X', casa_atual, casa_nova)
 
+    def king_walk(self, item, casa_atual, casa_nova):
+        atual_line, atual_col = self.detach_item(casa_atual)
+        new_line, new_col = self.detach_item(casa_nova)
 
-            passos = linha_atual - col_atual
-            unidade = -passos if passos < 0 else passos
+        total_lines = atual_line - new_line
+        total_cols = atual_col - new_col
+        step_lines = -1 if total_lines > 0 else 1
+        step_cols = -1 if total_cols > 0 else 1
+        aux_col, aux_line = atual_col, atual_line
+        if abs(total_lines) != abs(total_cols):
+            print('!!! WRONG MOVE !!!')
+            return False
 
-            for i in range(1, unidade+1):
-                import ipdb
-                ipdb.set_trace()
-                if col_atual+1
-                # negativo ou positivo?? HEEELP
+        for _ in range(abs(total_lines)):
+            aux_col += step_cols
+            aux_line += step_lines
+            if self.matriz[aux_line][aux_col] == ' ':
+                continue
+            if self.matriz[aux_line][aux_col].lower() != item.lower():
+                self.matriz[aux_line][aux_col] = ' '
+                new_line = new_line + step_lines
+                new_col = new_col + step_cols
+                self.count_point()
+                continue
+            break
 
+        else:
+            self.matriz[new_line][new_col] = item
+            self.matriz[atual_line][atual_col] = ' '
+            return True
 
-            # for i in range(passos)
-
-            linha_aux = 0
-            col_aux = 0
-            # verifica se movimentacao é valida
-            for linha in range(linha_atual, col_atual, step_l):
-                for col in range(linha_nova, col_nova, step_c):
-                    import ipdb
-                    ipdb.set_trace()
-                    if linha == linha_atual and col == col_atual:
-                        continue
-                    if self.matriz_players[linha][col] == ' ':
-                        print('sem coisas no caminho')
-                        continue
-                    if self.matriz_players[linha][col].lower() == 'o':
-                        print(self.matriz_players[linha][col].lower())
-                        print('movimentacao invalida, tem coisa no caminho')
-                        return False
-
-
-
-            import ipdb
-            ipdb.set_trace()
-
-
-
-
-
-
-        # caso mover peça dama
-        if self.matriz_players[casa_linha_atual][casa_col_atual] == 'O':
-            print('Dama 0')
-            if (casa_col_atual - casa_col_nova) < 0:
-                casa_check = casa_col_nova + 1
-            else:
-                casa_check = casa_col_nova - 1
-
-            if not self.matriz_players[casa_linha_nova - 1][casa_check] == ' ':
-                print('Movimento inválido pois não espaço vázio para movimento')
-                return False
-
-            step_l = -1 if casa_linha_atual > casa_linha_nova else 1
-            step_c = -1 if casa_col_atual > casa_linha_nova else 1
-
-            for linha in range(casa_linha_atual, casa_linha_nova, step_l):
-                for cl in range(casa_col_atual, casa_linha_nova, step_c):
-                    char_casa = self.matriz_players[linha][cl]
-                    print('char que estamos passando pela casa: {} ({}{})'.format(
-                        self.matriz_players[linha][cl], linha, cl))
-                    self.matriz_players[linha][cl] == 'O'
-                    if char_casa in ('o', 'O'):
-                        print('Opa, chegamos no nosso limite..')
-                        self.matriz_players[casa_linha_atual][
-                            casa_col_atual] = ' '
-
-            self.matriz_players[casa_linha_nova][casa_col_nova] = '0'
-            self.matriz_players[casa_linha_atual][casa_col_atual] = ' '
-            # self.count_point()
+        print('!!! WRONG MOVE !!!')
+        return False
 
     def count_point(self):
         self.score[self.player.char.piece] += 1
         self.player.points += +1
-        print(
-            '~> Parabéns ao jogador {}! Fez mas um ponto. \n\tPontuação '
-            'total de {}'.format(self.player.name, self.score[self.player.char.piece]))
+        print('~> Congratulations, {}! You get it.'.format(str(self.player)))
 
-    def atualizar_matriz(self, casa_atual, casa_nova):
-        print('atualizar_matriz: atual: {}, nova: {}'.format(
-            casa_atual, casa_nova))
-        if not self.verifica_movimentacao(casa_atual, casa_nova):
-            print('Tente escolher a pŕoxima jogada')
-            return False
+    def verify_game_over(self):
+        items = 0
+        for line in self.matriz:
+            for column in self.matriz:
+                if self.matriz[line][column] in ('x', 'X') or \
+                        self.matriz[line][column] in ('o', 'O'):
+                    items += 1
 
-        casa_linha_atual, casa_col_atual = self.desmonta_peca(casa_atual)
-        casa_linha_nova, casa_col_nova = self.desmonta_peca(casa_nova)
-
-        peca_atual = self.matriz_players[casa_linha_atual][casa_col_atual]
-        peca_nova = self.matriz_players[casa_linha_nova][casa_col_nova]
-
-        self.matriz_players[casa_linha_atual][casa_col_atual] = peca_nova
-        self.matriz_players[casa_linha_nova][casa_col_nova] = peca_atual
-
-        # self.verifica_final_jogo()
-
-        return True
-
-    def verifica_final_jogo(self):
-        pecas = 0
-        for linha in self.matriz_players:
-            for coluna in self.matriz_players:
-                import pdb
-                pdb.set_trace()
-                if self.matriz_players[linha][coluna] in ('x', 'X') or \
-                        self.matriz_players[linha][coluna] in ('o', 'O'):
-                    pecas += 1
-
-        print(pecas)
-        if pecas <= 3:
-            print('Jogo acabou!')
+        if items <= 3:
+            print('\t\t ~~~~~ GAME OVER ~~~~~')
 
         self.game_over()
 
@@ -233,85 +171,73 @@ class Game():
 
         exit()
 
-    def jogada(self):
+    def round(self):
         self.define_player()
-        linha = None
-        coluna = None
+        line = None
+        column = None
 
-        valida_peca_jogador = False
-        while valida_peca_jogador is False:
+        verify_player = False
+        while verify_player is False:
             peca_inicial = input('Qual peça você gostaria de movimentar? ')
-            linha, coluna = self.desmonta_peca(peca_inicial)
-            print(peca_inicial, linha, coluna)
-            peca = self.matriz_players[linha][coluna]
-            validar_peca_jogador = self.validar_peca_jogador(peca)
-            if validar_peca_jogador is True:
-                break
-
-        move_peca = False
-        while move_peca is False:
+            line, column = self.detach_item(peca_inicial)
+            print(peca_inicial, line, column)
+            peca = self.matriz[line][column]
+            validate_player = self.validate_player(peca)
+            if validate_player is False:
+                continue
             print('Para onde você gostaria de mover sua peça?')
-            self.sugestao_movimento(linha, coluna)
+            self.hint_move(line, column)
             peca_atual = input('Digite no console sua resposta: ')
-            if self.atualizar_matriz(peca_inicial, peca_atual) is True:
-                move_peca = True
-            # self.board.show_matriz()
+            if self.verifica_movimentacao(peca_inicial, peca_atual) is True:
+                break
 
         self.count_shift()
+        self.verify_game_over()
         self.start()
 
-    def sugestao_movimento(self, linha, coluna):
-        print('sugestao_movimento: {}, {}'.format(linha, coluna))
-        peca_da_vez = self.matriz_players[linha][coluna]
+    def hint_move(self, line, column):
+        piece = self.matriz[line][column]
 
         for key, val in self.board.letters.items():
-            if peca_da_vez == 'o':
-                if val == linha - 1:
-                    opcao_letra = key
-                    if not coluna + 1 >= 9:
+            if piece == 'o':
+                if val == line - 1:
+                    option = key
+                    if not column + 1 >= 9:
                         print('Você tem a opção de: \n\t => {}{}'.format(
-                            opcao_letra, coluna + 1))
-                    if not coluna - 1 <= 0:
+                            option, column + 1))
+                    if not column - 1 <= 0:
                         print('Você tem a opção de: \n\t => {}{}'.format(
-                            opcao_letra, coluna - 1))
-            if peca_da_vez == 'x':
-                if val == linha + 1:
-                    opcao_letra = key
-                    if not coluna + 1 >= 9:
+                            option, column - 1))
+            if piece == 'x':
+                if val == line + 1:
+                    option = key
+                    if not column + 1 >= 9:
                         print('Você tem a opção de: \n\t => {}{}'.format(
-                            opcao_letra, coluna + 1))
-                    if not coluna - 1 <= 0:
+                            option, column + 1))
+                    if not column - 1 <= 0:
                         print('Você tem a opção de: \n\t => {}{}'.format(
-                            opcao_letra, coluna - 1))
+                            option, column - 1))
 
-            if peca_da_vez in ('O', 'X'):
-                # print('DAMA! Bora mexer a Dama!')
+            if piece in ('O', 'X'):
                 break
 
-            # if peca_da_vez == 'X':
-            #     print('DAMA! Bora mexer a Dama!')
-            #     break
-
-    def validar_peca_jogador(self, peca):
+    def validate_player(self, peca):
         if self.player.char.piece == peca.lower():
-            print('Ok, vc é o jogador certo')
             return True
 
         else:
             print(
                 '!!! Desculpe, mas esse movimento é impropio. Sua peça é a '
                 '"{}" e você está tentando mover é a {}.'.format(
-                    self.player, peca))
+                    self.player.char.piece, peca))
             return False
 
-    def desmonta_peca(self, coordenadas):
-        while True:
-            try:
-                return self.board.letters[coordenadas[0]], int(coordenadas[1])
-                False
-            except KeyError:
-                print('Por favor, tente uma coordenada válida!')
-                return ('q', 'q')
+    def detach_item(self, coordenadas):
+        try:
+            return self.board.letters[coordenadas[0]], int(coordenadas[1])
+        except KeyError:
+            print('Por favor, tente uma coordenada válida!')
+            return ('q', 'q')
 
     def count_shift(self):
         self.shift += 1
