@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-from game.piece import Piece
 from game.player import Player
 from game.board import Board
 
@@ -33,9 +32,9 @@ class Game():
         else:
             self.player = self.players[1]
         print('~> Player {} move the piece {}, shift {}'.format(
-            str(self.player), self.player.char.piece, self.shift + 1))
+            str(self.player), self.player.char, self.shift + 1))
 
-    def verifica_movimentacao(self, casa_atual, casa_nova):
+    def verify_move(self, casa_atual, casa_nova):
         atual_line, atual_col = self.detach_item(casa_atual)
         new_line, new_col = self.detach_item(casa_nova)
 
@@ -53,7 +52,9 @@ class Game():
                     self.matriz[new_line][new_col] = 'o'
                     self.matriz[atual_line][atual_col] = ' '
                     if new_line == 1:
-                        print('Congratulations player 2, now you have a King')
+                        print(
+                            '\t\t --> Congratulations {}, now you have a King'
+                            .format(str(self.player)))
                         self.matriz[new_line][new_col] = 'O'
                     return True
 
@@ -65,7 +66,9 @@ class Game():
                     self.matriz[new_line + unidade][new_col + unidade] = 'o'
                     self.count_point()
                     if new_line == 1:
-                        print('Congratulations player 2, now you have a King')
+                        print(
+                            '\t\t --> Congratulations {}, now you have a King'
+                            .format(str(self.player)))
                         self.matriz[new_line][new_col] = 'O'
                     return True
             print('!!! WRONG MOVE !!!')
@@ -140,14 +143,14 @@ class Game():
         return False
 
     def count_point(self):
-        self.score[self.player.char.piece] += 1
+        self.score[self.player.char] += 1
         self.player.points += +1
         print('~> Congratulations, {}! You get it.'.format(str(self.player)))
 
     def verify_game_over(self):
         items = 0
-        for line in self.matriz:
-            for column in self.matriz:
+        for line, _ in enumerate(self.matriz):
+            for column, _ in enumerate(self.matriz[line]):
                 if self.matriz[line][column] in ('x', 'X') or \
                         self.matriz[line][column] in ('o', 'O'):
                     items += 1
@@ -155,7 +158,7 @@ class Game():
         if items <= 3:
             print('\t\t ~~~~~ GAME OVER ~~~~~')
 
-        self.game_over()
+            self.game_over()
 
     def game_over(self):
         x = self.score['x']
@@ -178,17 +181,16 @@ class Game():
 
         verify_player = False
         while verify_player is False:
-            peca_inicial = input('Qual peça você gostaria de movimentar? ')
-            line, column = self.detach_item(peca_inicial)
-            print(peca_inicial, line, column)
+            initial_piece = input('Qual peça você gostaria de movimentar? ')
+            line, column = self.detach_item(initial_piece)
             peca = self.matriz[line][column]
             validate_player = self.validate_player(peca)
             if validate_player is False:
                 continue
             print('Para onde você gostaria de mover sua peça?')
-            self.hint_move(line, column)
-            peca_atual = input('Digite no console sua resposta: ')
-            if self.verifica_movimentacao(peca_inicial, peca_atual) is True:
+            # self.hint_move(line, column)
+            atual_piece = input('Digite no console sua resposta: ')
+            if self.verify_move(initial_piece, atual_piece) is True:
                 break
 
         self.count_shift()
@@ -222,21 +224,21 @@ class Game():
                 break
 
     def validate_player(self, peca):
-        if self.player.char.piece == peca.lower():
+        if self.player.char == peca.lower():
             return True
 
         else:
             print(
                 '!!! Desculpe, mas esse movimento é impropio. Sua peça é a '
                 '"{}" e você está tentando mover é a {}.'.format(
-                    self.player.char.piece, peca))
+                    self.player.char, peca))
             return False
 
     def detach_item(self, coordenadas):
         try:
             return self.board.letters[coordenadas[0]], int(coordenadas[1])
         except KeyError:
-            print('Por favor, tente uma coordenada válida!')
+            print('>>> Por favor, tente uma coordenada válida!')
             return ('q', 'q')
 
     def count_shift(self):
