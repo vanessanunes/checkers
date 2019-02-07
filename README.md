@@ -17,10 +17,10 @@ regras de capturas
 - A pedra que em um lance capturar mais de uma peça, passar e não parar na
  área de coroação, não tem o direito de ser coroada
 - São declaradas empates se:
-1. Após 20 lances sucessivos de damas de cada jogador sem captura, a partida é 
-declarada como empate;
-2. 2 damas contra 2 damas;
-3. 2 damas contra uma;
-4. 2 damas contra uma dama e uma pedra;
-5. uma dama contra uma dama e uma dama contra uma dama e uma pedra, são 
-declarados empatados após 5 lances de cada jogador.
+1. Quando existir apenas 3 peças no tabuleiro
+
+# modo de jogar
+Existem as peças 'o' e 'x' no tabuleiro. As peças 'o' iniciamo o jogo.
+Existe as coordenadas de A à H (linhas) e de 1 à 8 (colunas).
+Digite, por exemplo, a coordenada h8 para movimentar sua peça.
+Para "comer" uma peça, você deve digitar a casa onde a peça do seu adversário está. 
